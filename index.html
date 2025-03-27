@@ -1,63 +1,109 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>uh oh!!!</title>
-    <style>
-        body {
-            background-color: #FF00FF;
-            font-family: Comic Sans MS, cursive, sans-serif;
-            color: yellow;
-            text-align: center;
-            overflow: hidden;
-        }
-        .center-gif {
-            margin-top: 50px;
-        }
-        .floaty {
-            position: absolute;
-            font-size: 24px;
-            animation: floaty 5s infinite;
-        }
-        @keyframes floaty {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(50vw, -30vh); }
-            50% { transform: translate(-30vw, 40vh); }
-            75% { transform: translate(60vw, -10vh); }
-            100% { transform: translate(0, 0); }
-        }
-        marquee {
-            font-size: 20px;
-            color: cyan;
-            font-weight: bold;
-            margin-top: 30px;
-        }
-        .warning {
-            font-size: 32px;
-            font-weight: bold;
-            color: red;
-            margin-top: 40px;
-        }
-    </style>
+  <title>🔺doption</title>
+  <style>
+    body {
+      background-color: #FF00FF;
+      font-family: Comic Sans MS, cursive, sans-serif;
+      color: yellow;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #overlay-content button {
+      background: white;
+      color: black;
+      font-size: 24px;
+      padding: 20px 40px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    .center-gif {
+      margin-top: 50px;
+    }
+
+    .floaty {
+      position: absolute;
+      font-size: 24px;
+      animation: floaty 5s infinite;
+    }
+
+    @keyframes floaty {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(50vw, -30vh); }
+      50% { transform: translate(-30vw, 40vh); }
+      75% { transform: translate(60vw, -10vh); }
+      100% { transform: translate(0, 0); }
+    }
+
+    marquee {
+      font-size: 20px;
+      color: cyan;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .warning {
+      font-size: 32px;
+      font-weight: bold;
+      color: red;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
-    <audio autoplay loop>
-        <source src="internroll.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
 
-    <div class="center-gif">
-        <img src="internroll.gif" alt="oops" width="400">
+  <!-- Overlay intro -->
+  <div id="overlay">
+    <div id="overlay-content">
+      <button onclick="beginMadness()">Ready to crunch?</button>
     </div>
+  </div>
 
-    <marquee direction="left">oopsie</marquee>
-    <marquee direction="right">sowwie</marquee>
-    <marquee direction="left">my bad</marquee>
-    <marquee direction="right">uh oh!!!</marquee>
+  <!-- Audio (starts after click) -->
+  <audio id="rr" loop>
+    <source src="internroll.mp3" type="audio/mpeg">
+  </audio>
 
-    <div class="floaty" style="top: 10%; left: 5%;">🤷‍♂️</div>
-    <div class="floaty" style="top: 30%; left: 80%;">¯\_(ツ)_/¯</div>
-    <div class="floaty" style="top: 60%; left: 20%;">NOOOO</div>
+  <!-- Main content -->
+  <div class="center-gif">
+    <img src="internroll.gif" alt="oops" width="400">
+  </div>
 
-    <div class="warning">AND STOP CLICKING RANDOM LINKS</div>
+  <marquee direction="left">oopsie</marquee>
+  <marquee direction="right">sowwie</marquee>
+  <marquee direction="left">my bad</marquee>
+  <marquee direction="right">oh no!</marquee>
+
+  <div class="floaty" style="top: 10%; left: 5%;">NOOOO</div>
+  <div class="floaty" style="top: 30%; left: 80%;">uh oh</div>
+  <div class="floaty" style="top: 60%; left: 20%;">:(</div>
+
+  <div class="warning">AND STOP CLICKING RANDOM LINKS</div>
+
+  <!-- JS to remove overlay and start audio -->
+  <script>
+    function beginMadness() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('rr').play();
+    }
+  </script>
+
 </body>
 </html>
