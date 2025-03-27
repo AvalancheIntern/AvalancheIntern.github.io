@@ -113,36 +113,44 @@
       to { opacity: 0.2; }
     }
 
-    #popup {
-      position: fixed;
-      top: 20vh;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #000;
-      color: #fff;
-      border: 3px dashed cyan;
-      padding: 20px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      z-index: 9998;
-      display: none;
-      animation: blink 1s infinite alternate;
-    }
+#popup {
+  position: fixed;
+  top: 20vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  border: 3px dashed cyan;
+  padding: 20px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 9998;
+  display: none;
+  text-align: center;
+  max-width: 500px;
+  width: 80vw;
+  box-sizing: border-box;
+}
 
-    #popup button {
-      display: block;
-      margin-top: 15px;
-      font-size: 16px;
-      padding: 10px 20px;
-      background: hotpink;
-      border: none;
-      cursor: pointer;
-      font-family: 'Comic Neue', sans-serif;
-    }
+#popup button {
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 16px;
+  padding: 10px 20px;
+  background: hotpink;
+  border: none;
+  cursor: pointer;
+  font-family: 'Comic Neue', sans-serif;
+}
 
     @media (max-width: 768px) {
       body {
         font-size: 20px;
+      }
+
+      #popup {
+        font-size: 16px;
+        width: 90vw;
       }
 
       marquee {
