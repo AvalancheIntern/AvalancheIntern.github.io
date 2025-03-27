@@ -3,6 +3,10 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>🔺doption</title>
+
+  <!-- Google Fonts: Comic Neue -->
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
   <style>
     html, body {
       margin: 0;
@@ -13,7 +17,7 @@
 
     body {
       background-color: #f04747;
-      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-family: 'Comic Neue', sans-serif;
       color: yellow;
       text-align: center;
     }
@@ -38,8 +42,19 @@
       padding: 20px 40px;
       border: none;
       cursor: pointer;
-      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-family: 'Comic Neue', cursive;
       font-style: italic;
+      transition: transform 0.3s ease;
+    }
+
+    #overlay-content button.exploded {
+      animation: boom 0.5s ease forwards;
+    }
+
+    @keyframes boom {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3) rotate(10deg); }
+      100% { transform: scale(0); opacity: 0; }
     }
 
     .center-gif {
@@ -73,6 +88,12 @@
       color: hotpink;
       margin-top: 40px;
       margin-bottom: 100px;
+      animation: blink 0.6s infinite alternate;
+    }
+
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.2; }
     }
 
     @media (max-width: 768px) {
@@ -109,14 +130,20 @@
   <!-- Overlay intro -->
   <div id="overlay">
     <div id="overlay-content">
-      <button onclick="beginMadness()">Ready to crunch?</button>
+      <button id="startBtn" onclick="beginMadness()">Ready to crunch?</button>
     </div>
   </div>
 
-  <!-- Audio (starts after click) -->
+    <!-- Audio: Explosion -->
+  <audio id="boom">
+    <source src="boom.mp3" type="audio/mpeg">
+  </audio>
+ 
+    <!-- Audio: Rickroll -->
   <audio id="rr" loop>
     <source src="internroll.mp3" type="audio/mpeg">
   </audio>
+
 
   <!-- Main content -->
   <div class="center-gif">
@@ -134,12 +161,19 @@
 
   <div class="warning">AND STOP CLICKING RANDOM LINKS</div>
 
-  <!-- JS to remove overlay and start audio -->
+  <!-- JS to handle launch -->
   <script>
     function beginMadness() {
-      document.getElementById('overlay').style.display = 'none';
       document.getElementById('rr').play();
-      document.body.style.overflow = 'auto'; // allow scrolling after launch
+      document.getElementById('boom').play();
+
+      const btn = document.getElementById('startBtn');
+      btn.classList.add('exploded');
+
+      setTimeout(() => {
+        document.getElementById('overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }, 500);
     }
   </script>
 
