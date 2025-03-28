@@ -9,7 +9,8 @@
   <meta property="og:url" content="https://www.avaxdaoritos.com" />
   <meta name="twitter:card" content="summary_large_image">
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=optional" rel="stylesheet">
 
   <style>
     html, body {
@@ -127,7 +128,8 @@
   transform: translateX(-50%) translateY(20px); /* start slightly lower */
   transition: opacity 0.4s ease, transform 0.4s ease;
   z-index: 99999;
-
+  width: 260px;
+  text-align: center;
   padding: 16px 42px;
   font-size: 24px;
   font-family: 'Bebas Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
