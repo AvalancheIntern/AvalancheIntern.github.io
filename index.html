@@ -9,6 +9,7 @@
   <meta property="og:url" content="https://www.avaxdaoritos.com" />
   <meta name="twitter:card" content="summary_large_image">
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
   <style>
     html, body {
@@ -108,30 +109,61 @@
         opacity: 0;
       }
     }
+@keyframes floatBob {
+  0%   { transform: translate(-50%, -50%) translateY(0); }
+  50%  { transform: translate(-50%, -50%) translateY(-6px); }
+  100% { transform: translate(-50%, -50%) translateY(0); }
+}
 
-    #startBtn {
-      position: absolute;
-      top: 75%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 99999;
-      padding: 14px 38px;
-      font-size: 17px;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      color: white;
-      background: #d10000; /* Bold, alert red */
-      border: 4px solid white;
-      border-radius: 100px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      cursor: pointer;
-      transition: all 0.25s ease-in-out;
-    }
-    #startBtn:hover {
-      transform: translateX(-50%) scale(1.06);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
-    }
+#startBtn {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+
+  padding: 16px 42px;
+  font-size: 24px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: white;
+
+  background: linear-gradient(to bottom, #ff3c3c, #b30000);
+  border: 4px solid white;
+  border-radius: 100px;
+
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 3px rgba(255, 255, 255, 0.15) inset;
+
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+
+  animation: floatBob 2.8s ease-in-out infinite;
+}
+
+#startBtn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50%;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+#startBtn:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 
+    0 12px 24px rgba(255, 255, 255, 0.4),
+    0 20px 60px rgba(255, 255, 255, 0.6);
+  animation: none; /* disable bob on hover */
+}
 
     #overlay-content button {
       background: white;
@@ -517,11 +549,16 @@
       clearInterval(triangleStorm);
     }
 
-    document.addEventListener("mousedown",   startStorm);
-    document.addEventListener("mouseup",     stopStorm);
-    document.addEventListener("touchstart",  startStorm);
-    document.addEventListener("touchend",    stopStorm);
-    document.addEventListener("touchcancel", stopStorm);
+document.addEventListener("mousedown", () => {
+  if (showSparkles) startStorm();
+});
+document.addEventListener("mouseup", stopStorm);
+
+document.addEventListener("touchstart", () => {
+  if (showSparkles) startStorm();
+});
+document.addEventListener("touchend", stopStorm);
+document.addEventListener("touchcancel", stopStorm);
 
     function spawnTriangle(e) {
       const offsetY = 300 + Math.random() * 100;
