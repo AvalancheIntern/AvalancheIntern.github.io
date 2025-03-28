@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>"Snack 🔺doption</title>
   <meta property="og:title" content="Snack 🔺 doption" />
   <meta property="og:description" content="A tri🔺ngle experience L1ke no other." />
@@ -14,32 +14,19 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       overflow-x: hidden !important;
       overflow-y: auto;
+      padding: env(safe-area-inset-top, 0) 
+               env(safe-area-inset-right, 0) 
+               env(safe-area-inset-bottom, 0) 
+               env(safe-area-inset-left, 0);
     }
-
     html, * {
       user-select: none;
       -webkit-user-select: none;
     }
-
-    .glitchy {
-      animation: glitch 0.3s infinite;
-    }
-
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px) rotate(1deg); }
-      40% { transform: translate(2px, -1px) rotate(-1deg); }
-      60% { transform: translate(-1px, 1px) rotate(0.5deg); }
-      80% { transform: translate(1px, -2px) rotate(-0.5deg); }
-      100% { transform: translate(0); }
-    }
-
-    input, textarea, button {
-      -webkit-user-select: none;
-      user-select: none;
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -66,15 +53,77 @@
 
     #overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       background: black;
       z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
+      will-change: transform;
+    }
+    .overlay-inner {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .preview-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100vh;
+      width: auto;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+      transition: filter 0.4s ease;
+      pointer-events: none;
+    }
+    .preview-img:hover {
+      filter: blur(3px);
+    }
+    .preview-img.flyaway {
+      animation: flyaway 1.2s ease-in-out forwards;
+    }
+    @keyframes flyaway {
+      0% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50%, -200%) scale(1.2) rotate(15deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(-50%, -2000%) scale(0.6) rotate(1440deg);
+        opacity: 0;
+      }
+    }
+
+    #startBtn {
+      position: absolute;
+      top: 75%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      padding: 14px 38px;
+      font-size: 17px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: white;
+      background: #d10000; /* Bold, alert red */
+      border: 4px solid white;
+      border-radius: 100px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+    }
+    #startBtn:hover {
+      transform: translateX(-50%) scale(1.06);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
     }
 
     #overlay-content button {
@@ -89,14 +138,8 @@
       transition: transform 0.3s ease;
       position: relative;
     }
-
     #overlay-content button.exploded {
       animation: boom 0.5s ease-out forwards;
-    }
-
-    @keyframes blink {
-      from { opacity: 1; }
-      to { opacity: 0.2; }
     }
 
     @keyframes boom {
@@ -108,10 +151,17 @@
       100% { transform: scale(3) rotate(720deg); opacity: 0; }
     }
 
-    .shake {
-      animation: screen-shake 0.5s ease;
+    /* Repeated animation for 'blink' */
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.2; }
     }
 
+    /* The main container that will "shake" */
+    #main.shake {
+      animation: screen-shake 0.5s ease;
+      will-change: transform;
+    }
     @keyframes screen-shake {
       0% { transform: translate(0px, 0px); }
       20% { transform: translate(-10px, 5px); }
@@ -120,8 +170,9 @@
       80% { transform: translate(5px, -3px); }
       100% { transform: translate(0px, 0px); }
     }
-        .center-gif {
-      margin-top: 50px;
+
+    .center-gif {
+      margin-top: 10px;
     }
 
     .floaty {
@@ -129,7 +180,6 @@
       font-size: 24px;
       animation: floaty 5s infinite;
     }
-
     @keyframes floaty {
       0% { transform: translate(0, 0); }
       25% { transform: translate(50vw, -30vh); }
@@ -172,7 +222,6 @@
       width: 80vw;
       box-sizing: border-box;
     }
-
     #popup button {
       margin-top: 15px;
       font-size: 16px;
@@ -201,7 +250,6 @@
       width: 80vw;
       box-shadow: 0 0 20px red;
     }
-
     #gotcha-popup button {
       margin-top: 20px;
       font-size: 18px;
@@ -214,11 +262,10 @@
     }
 
     @keyframes gotcha-flash {
-      0% { background: #111; }
-      50% { background: #ff79c6; }
+      0%   { background: #111; }
+      50%  { background: #ff79c6; }
       100% { background: #111; }
     }
-
     #gotcha-popup.flashy {
       animation: gotcha-flash 1s infinite ease-in-out;
     }
@@ -228,161 +275,197 @@
       25% { transform: rotate(5deg); }
       75% { transform: rotate(-5deg); }
     }
+
+    .glitchy {
+      animation: glitch 0.3s infinite;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px) rotate(1deg); }
+      40% { transform: translate(2px, -1px) rotate(-1deg); }
+      60% { transform: translate(-1px, 1px) rotate(0.5deg); }
+      80% { transform: translate(1px, -2px) rotate(-0.5deg); }
+      100% { transform: translate(0); }
+    }
   </style>
 </head>
 <body>
+  <div id="main">
     <div id="shield"></div>
 
-  <div id="overlay">
-    <div id="overlay-content">
-      <img src="AvaxLavaLime-single.jpg" alt="preview image" style="max-width: 50%; height: auto; margin-bottom: 20px;">
-      <button id="startBtn" onclick="beginMadness()">Ready to crunch?</button>
+    <div id="overlay">
+      <div class="overlay-inner">
+        <button id="startBtn" onclick="beginMadness()">Ready to crunch?</button>
+        <img src="AvaxLavaLime-triple.jpg" alt="preview image" class="preview-img" />
+      </div>
     </div>
-  </div>
 
-  <audio id="rr" loop><source src="internroll.mp3" type="audio/mpeg"></audio>
-  <audio id="boom"><source src="boom.mp3" type="audio/mpeg"></audio>
-  <audio id="alert"><source src="alert.mp3" type="audio/mpeg"></audio>
+    <audio id="rr" loop><source src="internroll.mp3" type="audio/mpeg"></audio>
+    <audio id="boom"><source src="boom.mp3" type="audio/mpeg"></audio>
+    <audio id="alert"><source src="alert.mp3" type="audio/mpeg"></audio>
 
-  <div class="center-gif">
-    <img src="internroll.gif" alt="oops" width="400">
-  </div>
+    <div class="center-gif">
+      <img src="internroll.gif" alt="oops" width="400">
+    </div>
 
-  <marquee direction="left">oopsie</marquee>
-  <marquee direction="right">sowwie</marquee>
-  <marquee direction="left">my bad</marquee>
-  <marquee direction="right">oh no!</marquee>
+    <marquee direction="left">oopsie</marquee>
+    <marquee direction="right">sowwie</marquee>
+    <marquee direction="left">my bad</marquee>
+    <marquee direction="right">oh no!</marquee>
 
-  <div class="floaty" style="top: 10%; left: 5%;">NOOOO</div>
-  <div class="floaty" style="top: 30%; left: 80%;">uh oh</div>
-  <div class="floaty" style="top: 60%; left: 20%;">¯\_(ツ)_/¯</div>
+    <div class="floaty" style="top: 10%; left: 5%;">NOOOO</div>
+    <div class="floaty" style="top: 30%; left: 80%;">uh oh</div>
+    <div class="floaty" style="top: 60%; left: 20%;">¯\_(ツ)_/¯</div>
 
-  <div class="warning">
-    <span id="warning-text">AND STOP CLICKING </span>
-    <a id="gotcha-link" href="#" onclick="showGotcha(event)" style="color: hotpink; text-decoration: underline;">RANDOM LINKS</a>
-  </div>
+    <div class="warning">
+      <span id="warning-text">AND STOP CLICKING </span>
+      <a id="gotcha-link" href="#" onclick="showGotcha(event)" style="color: hotpink; text-decoration: underline;">RANDOM LINKS</a>
+    </div>
 
-  <div id="gotcha-popup">
-    <div id="gotcha-text">SERIOUSLY???????</div>
-    <button id="gotcha-btn">sorry</button>
-  </div>
+    <div id="gotcha-popup">
+      <div id="gotcha-text">SERIOUSLY???????</div>
+      <button id="gotcha-btn">sorry</button>
+    </div>
 
-  <div id="popup">
-    <div id="popup-text"></div>
-    <button id="popup-btn" onclick="closePopup()">OK</button>
+    <div id="popup">
+      <div id="popup-text"></div>
+      <button id="popup-btn" onclick="closePopup()">OK</button>
+    </div>
   </div>
 
   <script src="confetti.browser.min.js"></script>
   <script>
-let showSparkles = false;
-const popup = document.getElementById('popup');
-const popupText = document.getElementById('popup-text');
-const popupBtn = document.getElementById('popup-btn');
-const crunchBtn = document.getElementById('startBtn');
-const gotchaBtn = document.getElementById('gotcha-btn');
+    let showSparkles = false;
+    const popup       = document.getElementById('popup');
+    const popupText   = document.getElementById('popup-text');
+    const popupBtn    = document.getElementById('popup-btn');
+    const crunchBtn   = document.getElementById('startBtn');
+    const gotchaBtn   = document.getElementById('gotcha-btn');
 
-const apologyTexts = [
-  "oopsie",
-  "so sorry",
-  "i SAID sorry",
-  "really REALLY sorry",
-  "IMSOSORRYITWONTEVERHAPPENAGAIN"
-];
-let gotchaJumpCount = 0;
+    const apologyTexts = [
+      "oopsie",
+      "so sorry",
+      "i SAID sorry",
+      "really REALLY sorry",
+      "IMSOSORRYITWONTEVERHAPPENAGAIN"
+    ];
+    let gotchaJumpCount = 0;
 
-const messages = [
-  { text: "You are now subscribed to 🔺 Triangle Facts™", button: "OK" },
-  { text: "⚡️ Welcome to the year 9001.", button: "Why?" },
-  { text: "🫦 Crunching L1me triangle... complete.", button: "Whatever" },
-  { text: "👁 Your data has been monetized (just kidding, maybe?)", button: "Cool" },
-  { text: "🍌 Did you eat the banana yet?", button: "Noooo" }
-];
+    const messages = [
+      { text: "You are now subscribed to 🔺 Triangle Facts™", button: "OK" },
+      { text: "⚡️ Welcome to the year 9001.", button: "Why?" },
+      { text: "🫦 Crunching L1me triangle... complete.", button: "Whatever" },
+      { text: "👁 Your data has been monetized (just kidding, maybe?)", button: "Cool" },
+      { text: "🍌 Did you eat the banana yet?", button: "Noooo" }
+    ];
+    let msgIndex = 0;
+    let popupInterval;
 
-let msgIndex = 0;
-let popupInterval;
+    function cyclePopup() {
+      const msg = messages[msgIndex];
+      popupText.textContent = msg.text;
+      popupBtn.textContent  = msg.button;
+      popup.style.display   = 'block';
+      msgIndex = (msgIndex + 1) % messages.length;
+    }
 
-function cyclePopup() {
-  const msg = messages[msgIndex];
-  popupText.textContent = msg.text;
-  popupBtn.textContent = msg.button;
-  popup.style.display = 'block';
-  msgIndex = (msgIndex + 1) % messages.length;
-}
+    function closePopup() {
+      popup.style.display = 'none';
+    }
 
-function closePopup() {
-  popup.style.display = 'none';
-}
+    function beginMadness() {
+      document.getElementById('rr').play();
+      document.getElementById('boom').play();
 
-function beginMadness() {
-  document.getElementById('rr').play();
-  document.getElementById('boom').play();
+      const rect = crunchBtn.getBoundingClientRect();
+      triangleRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-  const rect = crunchBtn.getBoundingClientRect();
-  triangleRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      crunchBtn.classList.add('exploded');
+      document.getElementById('main').classList.add('shake');
 
-  crunchBtn.classList.add('exploded');
-  document.body.classList.add('shake');
+      const previewImg = document.querySelector('.preview-img');
+      previewImg.classList.add('flyaway');
 
-  confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+      // Hide the button immediately
+      crunchBtn.style.display = 'none';
 
-  setTimeout(() => {
-    document.getElementById('overlay').style.display = 'none';
-    document.body.classList.remove('shake');
-    showSparkles = true;
+      // Make the overlay transparent
+      document.getElementById('overlay').style.background = 'transparent';
 
-    setTimeout(() => {
-      cyclePopup();
-      popupInterval = setInterval(cyclePopup, 10000);
-    }, 5000);
-  }, 500);
-}
-    document.addEventListener("mousemove", function(e) {
-  if (!showSparkles) return;
-  const sparkle = document.createElement("div");
-  sparkle.style.position = "fixed";
-  sparkle.style.left = e.clientX + "px";
-  sparkle.style.top = e.clientY + "px";
-  sparkle.style.width = "6px";
-  sparkle.style.height = "6px";
-  sparkle.style.background = "white";
-  sparkle.style.borderRadius = "50%";
-  sparkle.style.boxShadow = "0 0 6px yellow";
-  sparkle.style.pointerEvents = "none";
-  sparkle.style.zIndex = 9999;
-  document.body.appendChild(sparkle);
-  setTimeout(() => sparkle.remove(), 300);
-});
+      // Remove the overlay after 500ms, but remove the preview image after 1200ms
+      // so it "flys away" first
+      setTimeout(() => {
+        document.getElementById('overlay').remove();
+      }, 500);
 
-function triangleRipple(x, y) {
-  for (let i = 0; i < 36; i++) {
-    const tri = document.createElement("div");
-    tri.textContent = "🔺";
-    tri.style.position = "fixed";
-    tri.style.left = `${x}px`;
-    tri.style.top = `${y}px`;
-    tri.style.fontSize = "60px";
-    tri.style.pointerEvents = "none";
-    tri.style.zIndex = 9999;
-    tri.style.transition = "transform 2.5s ease-out, opacity 2.5s ease-out";
-    document.body.appendChild(tri);
+      setTimeout(() => {
+        previewImg.remove();
+      }, 1200);
 
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 100 + Math.random() * 50;
-    const dx = Math.cos(angle) * distance;
-    const dy = Math.sin(angle) * distance;
+      confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
 
-    requestAnimationFrame(() => {
-      tri.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`;
-      tri.style.opacity = 0;
+      // Stop shaking after 500ms and enable sparkles
+      setTimeout(() => {
+        document.getElementById('main').classList.remove('shake');
+        showSparkles = true;
+
+        setTimeout(() => {
+          cyclePopup();
+          popupInterval = setInterval(cyclePopup, 10000);
+        }, 5000);
+      }, 500);
+    }
+
+    // Sparkles follow the mouse once showSparkles == true
+    document.addEventListener("mousemove", (e) => {
+      if (!showSparkles) return;
+      const sparkle = document.createElement("div");
+      sparkle.style.position      = "fixed";
+      sparkle.style.left          = e.clientX + "px";
+      sparkle.style.top           = e.clientY + "px";
+      sparkle.style.width         = "6px";
+      sparkle.style.height        = "6px";
+      sparkle.style.background    = "white";
+      sparkle.style.borderRadius  = "50%";
+      sparkle.style.boxShadow     = "0 0 6px yellow";
+      sparkle.style.pointerEvents = "none";
+      sparkle.style.zIndex        = 9999;
+
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 300);
     });
 
-    setTimeout(() => tri.remove(), 2500);
-  }
-}
+    function triangleRipple(x, y) {
+      for (let i = 0; i < 36; i++) {
+        const tri = document.createElement("div");
+        tri.textContent           = "🔺";
+        tri.style.position        = "fixed";
+        tri.style.left            = `${x}px`;
+        tri.style.top             = `${y}px`;
+        tri.style.fontSize        = "60px";
+        tri.style.pointerEvents   = "none";
+        tri.style.zIndex          = 9999;
+        tri.style.transition      = "transform 2.5s ease-out, opacity 2.5s ease-out";
+        document.body.appendChild(tri);
 
-function emojiExplosion(e) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 50;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        requestAnimationFrame(() => {
+          tri.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`;
+          tri.style.opacity = 0;
+        });
+
+        setTimeout(() => tri.remove(), 2500);
+      }
+    }
+
+    function emojiExplosion(e) {
   const x = e.clientX || window.innerWidth / 2;
   const y = e.clientY || window.innerHeight / 2;
+
   for (let i = 0; i < 36; i++) {
     const cry = document.createElement("div");
     cry.textContent = "😭";
@@ -395,8 +478,9 @@ function emojiExplosion(e) {
     cry.style.transition = "transform 2.5s ease-out, opacity 2.5s ease-out";
     document.body.appendChild(cry);
 
+    // Just like triangleRipple: random direction & distance
     const angle = Math.random() * Math.PI * 2;
-    const distance = 120 + Math.random() * 80;
+    const distance = 100 + Math.random() * 50;
     const dx = Math.cos(angle) * distance;
     const dy = Math.sin(angle) * distance;
 
@@ -409,140 +493,154 @@ function emojiExplosion(e) {
   }
 }
 
-let triangleStorm;
-let lastX = 0;
-let lastY = 0;
+    // Track the mouse so we know where to spawn triangles
+    let lastX = 0;
+    let lastY = 0;
+    document.addEventListener("mousemove", (e) => {
+      lastX = e.clientX;
+      lastY = e.clientY;
+    });
 
-document.addEventListener("mousemove", (e) => {
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
+    // Start/stop the triangle storm on mouse or touch
+    let triangleStorm;
+    function startStorm() {
+      triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
+    }
+    function stopStorm() {
+      clearInterval(triangleStorm);
+    }
 
-document.addEventListener("mousedown", () => {
-  triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
-});
-document.addEventListener("mouseup", () => clearInterval(triangleStorm));
-document.addEventListener("touchstart", () => {
-  triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
-});
-document.addEventListener("touchend", () => clearInterval(triangleStorm));
-document.addEventListener("touchcancel", () => clearInterval(triangleStorm));
+    document.addEventListener("mousedown",   startStorm);
+    document.addEventListener("mouseup",     stopStorm);
+    document.addEventListener("touchstart",  startStorm);
+    document.addEventListener("touchend",    stopStorm);
+    document.addEventListener("touchcancel", stopStorm);
 
-function spawnTriangle(e) {
-  const offsetY = 300 + Math.random() * 100;
-  const positions = [-1, 1];
-  positions.forEach((dir) => {
-    const tri = document.createElement("div");
-    tri.textContent = "🔺";
-    tri.style.position = "fixed";
-    tri.style.left = (e?.clientX || lastX) + "px";
-    tri.style.top = (e?.clientY || lastY) + "px";
-    tri.style.fontSize = "20px";
-    tri.style.zIndex = 9999;
-    tri.style.pointerEvents = "none";
-    tri.style.transition = "transform 2s ease-out, opacity 2s ease-out";
-    document.body.appendChild(tri);
+    function spawnTriangle(e) {
+      const offsetY = 300 + Math.random() * 100;
+      const positions = [-1, 1];
+      positions.forEach((dir) => {
+        const tri = document.createElement("div");
+        tri.textContent         = "🔺";
+        tri.style.position      = "fixed";
+        tri.style.left          = `${e?.clientX || lastX}px`;
+        tri.style.top           = `${e?.clientY || lastY}px`;
+        tri.style.fontSize      = "20px";
+        tri.style.zIndex        = 9999;
+        tri.style.pointerEvents = "none";
+        tri.style.transition    = "transform 2s ease-out, opacity 2s ease-out";
+        document.body.appendChild(tri);
 
-    const offsetX = dir * offsetY * 0.6;
-    const angle = dir * (15 + Math.random() * 30);
+        const offsetX = dir * offsetY * 0.6;
+        const angle   = dir * (15 + Math.random() * 30);
 
-    setTimeout(() => {
-      tri.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
-      tri.style.opacity = 0;
-    }, 10);
+        setTimeout(() => {
+          tri.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
+          tri.style.opacity   = 0;
+        }, 10);
 
-    setTimeout(() => tri.remove(), 2000);
-  });
-}
+        setTimeout(() => tri.remove(), 2000);
+      });
+    }
+
     function showGotcha(e) {
-  const popup = document.getElementById("gotcha-popup");
-  const gotchaText = document.getElementById("gotcha-text");
+      const popup      = document.getElementById("gotcha-popup");
+      const gotchaText = document.getElementById("gotcha-text");
 
-  popup.style.display = "block";
-  popup.classList.add("flashy");
-  document.body.classList.add("shake");
-  gotchaText.classList.add("glitchy");
+      popup.style.display = "block";
+      popup.classList.add("flashy");
+      document.getElementById("main").classList.add("shake");
+      gotchaText.classList.add("glitchy");
 
-  document.getElementById("gotcha-link").style.display = "none";
-  document.getElementById("warning-text").textContent = "NOW YOU'VE DONE IT ";
+      document.getElementById("gotcha-link").style.display = "none";
+      document.getElementById("warning-text").textContent   = "NOW YOU'VE DONE IT ";
 
-  emojiExplosion(e);
-  document.getElementById("alert").play();
-  startCryRain();
+      emojiExplosion(e);
+      document.getElementById("alert").play();
+      startCryRain();
 
-  setTimeout(() => {
-    document.body.classList.remove("shake");
-  }, 500);
+      setTimeout(() => {
+        document.getElementById("main").classList.remove("shake");
+      }, 500);
 
-  // Reset jumping
-  gotchaJumpCount = 0;
-  gotchaBtn.textContent = apologyTexts[gotchaJumpCount];
-  gotchaBtn.style.position = "relative";
-  gotchaBtn.style.left = "0px";
-  gotchaBtn.style.top = "0px";
-}
+      // Reset the gotcha button to the first apology
+      resetGotchaButton(true);
+    }
 
-gotchaBtn.addEventListener("click", () => {
-  const popupBox = document.getElementById("gotcha-popup");
-  const btnWidth = gotchaBtn.offsetWidth;
-  const btnHeight = gotchaBtn.offsetHeight;
-  const maxX = popupBox.offsetWidth - btnWidth;
-  const maxY = popupBox.offsetHeight - btnHeight;
+    gotchaBtn.addEventListener("click", () => {
+      const popupBox = document.getElementById("gotcha-popup");
+      const btnWidth = gotchaBtn.offsetWidth;
+      const btnHeight = gotchaBtn.offsetHeight;
+      const maxX = popupBox.offsetWidth - btnWidth;
+      const maxY = popupBox.offsetHeight - btnHeight;
 
-  if (gotchaJumpCount < apologyTexts.length - 1) {
-    gotchaJumpCount++;
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-    gotchaBtn.style.position = "absolute";
-    gotchaBtn.style.left = `${randomX}px`;
-    gotchaBtn.style.top = `${randomY}px`;
-    gotchaBtn.textContent = apologyTexts[gotchaJumpCount];
-  } else {
-    closeGotcha();
-  }
-});
+      if (gotchaJumpCount < apologyTexts.length - 1) {
+        gotchaJumpCount++;
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        gotchaBtn.style.position = "absolute";
+        gotchaBtn.style.left = `${randomX}px`;
+        gotchaBtn.style.top  = `${randomY}px`;
+        gotchaBtn.textContent = apologyTexts[gotchaJumpCount];
+      } else {
+        closeGotcha();
+      }
+    });
 
-function closeGotcha() {
-  const popup = document.getElementById("gotcha-popup");
-  popup.style.display = "none";
-  popup.classList.remove("flashy");
-  document.getElementById("gotcha-text").classList.remove("glitchy");
+    function closeGotcha() {
+      const popup = document.getElementById("gotcha-popup");
+      popup.style.display = "none";
+      popup.classList.remove("flashy");
+      document.getElementById("gotcha-text").classList.remove("glitchy");
 
-  gotchaBtn.textContent = "sorry";
-  gotchaBtn.style.position = "relative";
-  gotchaBtn.style.left = "0px";
-  gotchaBtn.style.top = "0px";
-  gotchaJumpCount = 0;
+      // Final reset with text "sorry"
+      resetGotchaButton(false);
 
-  document.getElementById("warning-text").textContent = "AND STOP CLICKING ";
-  document.getElementById("gotcha-link").style.display = "inline";
-}
+      document.getElementById("warning-text").textContent = "AND STOP CLICKING ";
+      document.getElementById("gotcha-link").style.display = "inline";
+    }
 
-function cryStorm() {
-  const cry = document.createElement("div");
-  cry.textContent = "😭";
-  cry.style.position = "fixed";
-  cry.style.left = Math.random() * window.innerWidth + "px";
-  cry.style.top = "-30px";
-  cry.style.fontSize = "24px";
-  cry.style.zIndex = 9999;
-  cry.style.pointerEvents = "none";
-  cry.style.transition = "transform 3s linear, opacity 3s linear";
-  document.body.appendChild(cry);
+    /**
+     * Reset the gotcha button’s position and either start at the
+     * first “oopsie” or revert to final “sorry” text. 
+     */
+    function resetGotchaButton(startOver) {
+      gotchaBtn.style.position = "relative";
+      gotchaBtn.style.left     = "0px";
+      gotchaBtn.style.top      = "0px";
 
-  requestAnimationFrame(() => {
-    cry.style.transform = `translateY(${window.innerHeight + 60}px) translateX(${(Math.random() - 0.5) * 100}px)`;
-    cry.style.opacity = 0;
-  });
+      gotchaJumpCount = startOver ? 0 : 0; // zero in both cases
+      gotchaBtn.textContent = startOver 
+          ? apologyTexts[0]  // "oopsie"
+          : "sorry";         // final text
+    }
 
-  setTimeout(() => cry.remove(), 3000);
-}
+    function cryStorm() {
+      const cry = document.createElement("div");
+      cry.textContent           = "😭";
+      cry.style.position        = "fixed";
+      cry.style.left            = Math.random() * window.innerWidth + "px";
+      cry.style.top             = "-30px";
+      cry.style.fontSize        = "24px";
+      cry.style.zIndex          = 9999;
+      cry.style.pointerEvents   = "none";
+      cry.style.transition      = "transform 3s linear, opacity 3s linear";
+      document.body.appendChild(cry);
 
-let cryInterval;
-function startCryRain() {
-  cryInterval = setInterval(cryStorm, 100);
-  setTimeout(() => clearInterval(cryInterval), 4000);
-}
-</script>
+      requestAnimationFrame(() => {
+        cry.style.transform = `translateY(${window.innerHeight + 60}px) 
+                               translateX(${(Math.random() - 0.5) * 100}px)`;
+        cry.style.opacity   = 0;
+      });
+
+      setTimeout(() => cry.remove(), 3000);
+    }
+
+    let cryInterval;
+    function startCryRain() {
+      cryInterval = setInterval(cryStorm, 100);
+      setTimeout(() => clearInterval(cryInterval), 4000);
+    }
+  </script>
 </body>
 </html>
