@@ -14,26 +14,28 @@
       overflow-y: auto;
     }
 
-html {
-  user-select: none;
-  -webkit-user-select: none;
-}
+    html, * {
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-* {
-  user-select: none;
-  -webkit-user-select: none;
-}
+    .glitchy {
+      animation: glitch 0.3s infinite;
+    }
 
-    body::selection,
-*::selection {
-  background: none;
-  color: inherit;
-}
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px) rotate(1deg); }
+      40% { transform: translate(2px, -1px) rotate(-1deg); }
+      60% { transform: translate(-1px, 1px) rotate(0.5deg); }
+      80% { transform: translate(1px, -2px) rotate(-0.5deg); }
+      100% { transform: translate(0); }
+    }
 
     input, textarea, button {
-  -webkit-user-select: none;
-  user-select: none;
-}
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
     body {
       background-color: #9900d0;
@@ -41,7 +43,6 @@ html {
       color: yellow;
       text-align: center;
       position: relative;
-      user-select: none;
       -webkit-user-drag: none;
     }
 
@@ -51,15 +52,11 @@ html {
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      user-select: none;
-      -webkit-user-select: none;
       pointer-events: none;
     }
 
     #overlay, img, marquee, .center-gif, .floaty, .warning, #popup {
-      user-select: none;
       -webkit-user-drag: none;
-      -webkit-user-select: none;
     }
 
     #overlay {
@@ -85,16 +82,12 @@ html {
       font-family: 'Comic Neue', cursive;
       font-style: italic;
       transition: transform 0.3s ease;
+      position: relative;
     }
 
     #overlay-content button.exploded {
       animation: boom 0.5s ease-out forwards;
     }
-
-    #popup, #popup * {
-  user-select: none;
-  -webkit-user-select: none;
-}
 
     @keyframes blink {
       from { opacity: 1; }
@@ -122,8 +115,7 @@ html {
       80% { transform: translate(5px, -3px); }
       100% { transform: translate(0px, 0px); }
     }
-
-    .center-gif {
+        .center-gif {
       margin-top: 50px;
     }
 
@@ -177,7 +169,6 @@ html {
     }
 
     #popup button {
-      display: inline-block;
       margin-top: 15px;
       font-size: 16px;
       padding: 10px 20px;
@@ -187,39 +178,66 @@ html {
       font-family: 'Comic Neue', sans-serif;
     }
 
-    @media (max-width: 768px) {
-      body { font-size: 20px; }
-      #popup { font-size: 16px; width: 90vw; }
-      marquee { font-size: 28px; }
-      .warning { font-size: 40px; }
-      #overlay-content button {
-        font-size: 28px;
-        padding: 25px 50px;
-      }
-      .floaty { font-size: 32px; }
-      .center-gif img {
-        width: 90vw;
-        height: auto;
-      }
+    #gotcha-popup {
+      position: fixed;
+      top: 30vh;
+      left: 50%;
+      transform: translateX(-50%);
+      background: black;
+      color: white;
+      border: 4px dotted red;
+      padding: 30px;
+      font-size: 22px;
+      font-weight: bold;
+      z-index: 10000;
+      display: none;
+      text-align: center;
+      max-width: 500px;
+      width: 80vw;
+      box-shadow: 0 0 20px red;
+    }
+
+    #gotcha-popup button {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px 25px;
+      background: hotpink;
+      border: none;
+      font-family: 'Comic Neue', cursive;
+      animation: wiggle 0.3s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes gotcha-flash {
+      0% { background: #111; }
+      50% { background: #ff79c6; }
+      100% { background: #111; }
+    }
+
+    #gotcha-popup.flashy {
+      animation: gotcha-flash 1s infinite ease-in-out;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
     }
   </style>
 </head>
-
 <body>
-  <div id="shield"></div>
+    <div id="shield"></div>
 
-  <!-- Overlay intro -->
   <div id="overlay">
     <div id="overlay-content">
       <button id="startBtn" onclick="beginMadness()">Ready to crunch?</button>
     </div>
   </div>
 
-  <!-- Audio -->
   <audio id="rr" loop><source src="internroll.mp3" type="audio/mpeg"></audio>
   <audio id="boom"><source src="boom.mp3" type="audio/mpeg"></audio>
+  <audio id="alert"><source src="alert.mp3" type="audio/mpeg"></audio>
 
-  <!-- Main content -->
   <div class="center-gif">
     <img src="internroll.gif" alt="oops" width="400">
   </div>
@@ -233,45 +251,101 @@ html {
   <div class="floaty" style="top: 30%; left: 80%;">uh oh</div>
   <div class="floaty" style="top: 60%; left: 20%;">¯\_(ツ)_/¯</div>
 
-  <div class="warning">AND STOP CLICKING RANDOM LINKS</div>
+  <div class="warning">
+    <span id="warning-text">AND STOP CLICKING </span>
+    <a id="gotcha-link" href="#" onclick="showGotcha(event)" style="color: hotpink; text-decoration: underline;">RANDOM LINKS</a>
+  </div>
 
-  <!-- Popup overlay -->
+  <div id="gotcha-popup">
+    <div id="gotcha-text">SERIOUSLY???????</div>
+    <button id="gotcha-btn">sorry</button>
+  </div>
+
   <div id="popup">
     <div id="popup-text"></div>
     <button id="popup-btn" onclick="closePopup()">OK</button>
   </div>
 
-  <!-- Confetti -->
   <script src="confetti.browser.min.js"></script>
-
   <script>
-    let showSparkles = false;
-    const popup = document.getElementById('popup');
-    const popupText = document.getElementById('popup-text');
-    const popupBtn = document.getElementById('popup-btn');
+let showSparkles = false;
+const popup = document.getElementById('popup');
+const popupText = document.getElementById('popup-text');
+const popupBtn = document.getElementById('popup-btn');
+const crunchBtn = document.getElementById('startBtn');
+const gotchaBtn = document.getElementById('gotcha-btn');
 
-    const messages = [
-      { text: "You are now subscribed to 🔺 Triangle Facts™", button: "OK" },
-      { text: "⚡️ Welcome to the year 9001.", button: "Why?" },
-      { text: "🫦 Crunching L1me triangle... complete.", button: "Whatever" },
-      { text: "👁 Your data has been monetized (just kidding, maybe?)", button: "Cool" },
-      { text: "🍌 Did you eat the banana yet?", button: "Noooo" }
-    ];
+const apologyTexts = [
+  "oopsie",
+  "so sorry",
+  "i SAID sorry",
+  "really REALLY sorry",
+  "IMSOSORRYITWONTEVERHAPPENAGAIN"
+];
+let gotchaJumpCount = 0;
 
-    let msgIndex = 0;
-    let popupInterval;
+const messages = [
+  { text: "You are now subscribed to 🔺 Triangle Facts™", button: "OK" },
+  { text: "⚡️ Welcome to the year 9001.", button: "Why?" },
+  { text: "🫦 Crunching L1me triangle... complete.", button: "Whatever" },
+  { text: "👁 Your data has been monetized (just kidding, maybe?)", button: "Cool" },
+  { text: "🍌 Did you eat the banana yet?", button: "Noooo" }
+];
 
-    function cyclePopup() {
-      const msg = messages[msgIndex];
-      popupText.textContent = msg.text;
-      popupBtn.textContent = msg.button;
-      popup.style.display = 'block';
-      msgIndex = (msgIndex + 1) % messages.length;
-    }
+let msgIndex = 0;
+let popupInterval;
 
-    function closePopup() {
-      popup.style.display = 'none';
-    }
+function cyclePopup() {
+  const msg = messages[msgIndex];
+  popupText.textContent = msg.text;
+  popupBtn.textContent = msg.button;
+  popup.style.display = 'block';
+  msgIndex = (msgIndex + 1) % messages.length;
+}
+
+function closePopup() {
+  popup.style.display = 'none';
+}
+
+function beginMadness() {
+  document.getElementById('rr').play();
+  document.getElementById('boom').play();
+
+  const rect = crunchBtn.getBoundingClientRect();
+  triangleRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+  crunchBtn.classList.add('exploded');
+  document.body.classList.add('shake');
+
+  confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+
+  setTimeout(() => {
+    document.getElementById('overlay').style.display = 'none';
+    document.body.classList.remove('shake');
+    showSparkles = true;
+
+    setTimeout(() => {
+      cyclePopup();
+      popupInterval = setInterval(cyclePopup, 10000);
+    }, 5000);
+  }, 500);
+}
+    document.addEventListener("mousemove", function(e) {
+  if (!showSparkles) return;
+  const sparkle = document.createElement("div");
+  sparkle.style.position = "fixed";
+  sparkle.style.left = e.clientX + "px";
+  sparkle.style.top = e.clientY + "px";
+  sparkle.style.width = "6px";
+  sparkle.style.height = "6px";
+  sparkle.style.background = "white";
+  sparkle.style.borderRadius = "50%";
+  sparkle.style.boxShadow = "0 0 6px yellow";
+  sparkle.style.pointerEvents = "none";
+  sparkle.style.zIndex = 9999;
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 300);
+});
 
 function triangleRipple(x, y) {
   for (let i = 0; i < 36; i++) {
@@ -280,10 +354,10 @@ function triangleRipple(x, y) {
     tri.style.position = "fixed";
     tri.style.left = `${x}px`;
     tri.style.top = `${y}px`;
-    tri.style.fontSize = "60px"; // Bigger size!
+    tri.style.fontSize = "60px";
     tri.style.pointerEvents = "none";
     tri.style.zIndex = 9999;
-    tri.style.transition = "transform 1s ease-out, opacity 1s ease-out";
+    tri.style.transition = "transform 2.5s ease-out, opacity 2.5s ease-out";
     document.body.appendChild(tri);
 
     const angle = Math.random() * Math.PI * 2;
@@ -296,112 +370,173 @@ function triangleRipple(x, y) {
       tri.style.opacity = 0;
     });
 
-    setTimeout(() => tri.remove(), 1000);
+    setTimeout(() => tri.remove(), 2500);
   }
 }
 
-    function beginMadness() {
-      document.getElementById('rr').play();
-      document.getElementById('boom').play();
+function emojiExplosion(e) {
+  const x = e.clientX || window.innerWidth / 2;
+  const y = e.clientY || window.innerHeight / 2;
+  for (let i = 0; i < 36; i++) {
+    const cry = document.createElement("div");
+    cry.textContent = "😭";
+    cry.style.position = "fixed";
+    cry.style.left = `${x}px`;
+    cry.style.top = `${y}px`;
+    cry.style.fontSize = "48px";
+    cry.style.pointerEvents = "none";
+    cry.style.zIndex = 9999;
+    cry.style.transition = "transform 2.5s ease-out, opacity 2.5s ease-out";
+    document.body.appendChild(cry);
 
-      const btn = document.getElementById('startBtn');
-      const rect = btn.getBoundingClientRect();
-      triangleRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 120 + Math.random() * 80;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
 
-      btn.classList.add('exploded');
-      document.body.classList.add('shake');
-
-      confetti({
-        particleCount: 200,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
-
-      setTimeout(() => {
-        document.getElementById('overlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.body.classList.remove('shake');
-
-        showSparkles = true;
-        setTimeout(() => {
-          cyclePopup();
-          popupInterval = setInterval(cyclePopup, 10000);
-        }, 5000);
-      }, 500);
-    }
-
-    document.addEventListener("mousemove", function(e) {
-      if (!showSparkles) return;
-      const sparkle = document.createElement("div");
-      sparkle.style.position = "fixed";
-      sparkle.style.left = e.clientX + "px";
-      sparkle.style.top = e.clientY + "px";
-      sparkle.style.width = "6px";
-      sparkle.style.height = "6px";
-      sparkle.style.background = "white";
-      sparkle.style.borderRadius = "50%";
-      sparkle.style.boxShadow = "0 0 6px yellow";
-      sparkle.style.pointerEvents = "none";
-      sparkle.style.zIndex = 9999;
-      document.body.appendChild(sparkle);
-      setTimeout(() => sparkle.remove(), 300);
+    requestAnimationFrame(() => {
+      cry.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`;
+      cry.style.opacity = 0;
     });
 
-    document.addEventListener("mousedown", () => {
-      triangleStorm = setInterval(spawnTriangle, 50);
-    });
+    setTimeout(() => cry.remove(), 2500);
+  }
+}
 
-    document.addEventListener("mouseup", () => {
-      clearInterval(triangleStorm);
-    });
+let triangleStorm;
+let lastX = 0;
+let lastY = 0;
 
-    // Mobile support
+document.addEventListener("mousemove", (e) => {
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+
+document.addEventListener("mousedown", () => {
+  triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
+});
+document.addEventListener("mouseup", () => clearInterval(triangleStorm));
 document.addEventListener("touchstart", () => {
   triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
 });
-document.addEventListener("touchend", () => {
-  clearInterval(triangleStorm);
+document.addEventListener("touchend", () => clearInterval(triangleStorm));
+document.addEventListener("touchcancel", () => clearInterval(triangleStorm));
+
+function spawnTriangle(e) {
+  const offsetY = 300 + Math.random() * 100;
+  const positions = [-1, 1];
+  positions.forEach((dir) => {
+    const tri = document.createElement("div");
+    tri.textContent = "🔺";
+    tri.style.position = "fixed";
+    tri.style.left = (e?.clientX || lastX) + "px";
+    tri.style.top = (e?.clientY || lastY) + "px";
+    tri.style.fontSize = "20px";
+    tri.style.zIndex = 9999;
+    tri.style.pointerEvents = "none";
+    tri.style.transition = "transform 2s ease-out, opacity 2s ease-out";
+    document.body.appendChild(tri);
+
+    const offsetX = dir * offsetY * 0.6;
+    const angle = dir * (15 + Math.random() * 30);
+
+    setTimeout(() => {
+      tri.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
+      tri.style.opacity = 0;
+    }, 10);
+
+    setTimeout(() => tri.remove(), 2000);
+  });
+}
+    function showGotcha(e) {
+  const popup = document.getElementById("gotcha-popup");
+  const gotchaText = document.getElementById("gotcha-text");
+
+  popup.style.display = "block";
+  popup.classList.add("flashy");
+  document.body.classList.add("shake");
+  gotchaText.classList.add("glitchy");
+
+  document.getElementById("gotcha-link").style.display = "none";
+  document.getElementById("warning-text").textContent = "NOW YOU'VE DONE IT ";
+
+  emojiExplosion(e);
+  document.getElementById("alert").play();
+  startCryRain();
+
+  setTimeout(() => {
+    document.body.classList.remove("shake");
+  }, 500);
+
+  // Reset jumping
+  gotchaJumpCount = 0;
+  gotchaBtn.textContent = apologyTexts[gotchaJumpCount];
+  gotchaBtn.style.position = "relative";
+  gotchaBtn.style.left = "0px";
+  gotchaBtn.style.top = "0px";
+}
+
+gotchaBtn.addEventListener("click", () => {
+  const popupBox = document.getElementById("gotcha-popup");
+  const btnWidth = gotchaBtn.offsetWidth;
+  const btnHeight = gotchaBtn.offsetHeight;
+  const maxX = popupBox.offsetWidth - btnWidth;
+  const maxY = popupBox.offsetHeight - btnHeight;
+
+  if (gotchaJumpCount < apologyTexts.length - 1) {
+    gotchaJumpCount++;
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+    gotchaBtn.style.position = "absolute";
+    gotchaBtn.style.left = `${randomX}px`;
+    gotchaBtn.style.top = `${randomY}px`;
+    gotchaBtn.textContent = apologyTexts[gotchaJumpCount];
+  } else {
+    closeGotcha();
+  }
 });
-document.addEventListener("touchcancel", () => {
-  clearInterval(triangleStorm);
-});    
 
-    let triangleStorm;
+function closeGotcha() {
+  const popup = document.getElementById("gotcha-popup");
+  popup.style.display = "none";
+  popup.classList.remove("flashy");
+  document.getElementById("gotcha-text").classList.remove("glitchy");
 
-    function spawnTriangle(e) {
-      const offsetY = 300 + Math.random() * 100;
-      const positions = [-1, 1];
-      positions.forEach((dir) => {
-        const tri = document.createElement("div");
-        tri.textContent = "🔺";
-        tri.style.position = "fixed";
-        tri.style.left = (e?.clientX || lastX) + "px";
-        tri.style.top = (e?.clientY || lastY) + "px";
-        tri.style.fontSize = "20px";
-        tri.style.zIndex = 9999;
-        tri.style.pointerEvents = "none";
-        tri.style.userSelect = "none";
-        tri.style.transition = "transform 2s ease-out, opacity 2s ease-out";
-        document.body.appendChild(tri);
+  gotchaBtn.textContent = "sorry";
+  gotchaBtn.style.position = "relative";
+  gotchaBtn.style.left = "0px";
+  gotchaBtn.style.top = "0px";
+  gotchaJumpCount = 0;
 
-        const offsetX = dir * offsetY * 0.6;
-        const angle = dir * (15 + Math.random() * 30);
+  document.getElementById("warning-text").textContent = "AND STOP CLICKING ";
+  document.getElementById("gotcha-link").style.display = "inline";
+}
 
-        setTimeout(() => {
-          tri.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
-          tri.style.opacity = 0;
-        }, 10);
+function cryStorm() {
+  const cry = document.createElement("div");
+  cry.textContent = "😭";
+  cry.style.position = "fixed";
+  cry.style.left = Math.random() * window.innerWidth + "px";
+  cry.style.top = "-30px";
+  cry.style.fontSize = "24px";
+  cry.style.zIndex = 9999;
+  cry.style.pointerEvents = "none";
+  cry.style.transition = "transform 3s linear, opacity 3s linear";
+  document.body.appendChild(cry);
 
-        setTimeout(() => tri.remove(), 2000);
-      });
-    }
+  requestAnimationFrame(() => {
+    cry.style.transform = `translateY(${window.innerHeight + 60}px) translateX(${(Math.random() - 0.5) * 100}px)`;
+    cry.style.opacity = 0;
+  });
 
-    let lastX = 0;
-    let lastY = 0;
-    document.addEventListener("mousemove", (e) => {
-      lastX = e.clientX;
-      lastY = e.clientY;
-    });
-  </script>
+  setTimeout(() => cry.remove(), 3000);
+}
+
+let cryInterval;
+function startCryRain() {
+  cryInterval = setInterval(cryStorm, 100);
+  setTimeout(() => clearInterval(cryInterval), 4000);
+}
+</script>
 </body>
 </html>
