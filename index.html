@@ -4,8 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>🔺doption</title>
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-</head>
-<body>
 
   <style>
     html, body {
@@ -15,12 +13,52 @@
       overflow: hidden;
     }
 
+html {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+    body::selection,
+*::selection {
+  background: none;
+  color: inherit;
+}
+
+    input, textarea, button {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
     body {
-      background-color: #f04747;
+      background-color: #9900d0;
       font-family: 'Comic Neue', sans-serif;
       color: yellow;
       text-align: center;
       position: relative;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    #shield {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
+    }
+
+    #overlay, img, marquee, .center-gif, .floaty, .warning, #popup {
+      user-select: none;
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
     }
 
     #overlay {
@@ -50,6 +88,16 @@
 
     #overlay-content button.exploded {
       animation: boom 0.5s ease-out forwards;
+    }
+
+    #popup, #popup * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.2; }
     }
 
     @keyframes boom {
@@ -108,74 +156,56 @@
       animation: blink 0.6s infinite alternate;
     }
 
-    @keyframes blink {
-      from { opacity: 1; }
-      to { opacity: 0.2; }
+    #popup {
+      position: fixed;
+      top: 20vh;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #fff;
+      border: 3px dashed cyan;
+      padding: 20px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 9998;
+      display: none;
+      text-align: center;
+      max-width: 500px;
+      width: 80vw;
+      box-sizing: border-box;
     }
 
-#popup {
-  position: fixed;
-  top: 20vh;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  border: 3px dashed cyan;
-  padding: 20px 30px;
-  font-size: 18px;
-  font-weight: bold;
-  z-index: 9998;
-  display: none;
-  text-align: center;
-  max-width: 500px;
-  width: 80vw;
-  box-sizing: border-box;
-}
-
-#popup button {
-  display: inline-block;
-  margin-top: 15px;
-  font-size: 16px;
-  padding: 10px 20px;
-  background: hotpink;
-  border: none;
-  cursor: pointer;
-  font-family: 'Comic Neue', sans-serif;
-}
+    #popup button {
+      display: inline-block;
+      margin-top: 15px;
+      font-size: 16px;
+      padding: 10px 20px;
+      background: hotpink;
+      border: none;
+      cursor: pointer;
+      font-family: 'Comic Neue', sans-serif;
+    }
 
     @media (max-width: 768px) {
-      body {
-        font-size: 20px;
-      }
-
-      #popup {
-        font-size: 16px;
-        width: 90vw;
-      }
-
-      marquee {
-        font-size: 28px;
-      }
-
-      .warning {
-        font-size: 40px;
-      }
-
+      body { font-size: 20px; }
+      #popup { font-size: 16px; width: 90vw; }
+      marquee { font-size: 28px; }
+      .warning { font-size: 40px; }
       #overlay-content button {
         font-size: 28px;
         padding: 25px 50px;
       }
-
-      .floaty {
-        font-size: 32px;
-      }
-
+      .floaty { font-size: 32px; }
       .center-gif img {
         width: 90vw;
         height: auto;
       }
     }
   </style>
+</head>
+
+<body>
+  <div id="shield"></div>
 
   <!-- Overlay intro -->
   <div id="overlay">
@@ -211,7 +241,7 @@
   </div>
 
   <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="confetti.browser.min.js"></script>
 
   <script>
     let showSparkles = false;
@@ -242,11 +272,41 @@
       popup.style.display = 'none';
     }
 
+function triangleRipple(x, y) {
+  for (let i = 0; i < 36; i++) {
+    const tri = document.createElement("div");
+    tri.textContent = "🔺";
+    tri.style.position = "fixed";
+    tri.style.left = `${x}px`;
+    tri.style.top = `${y}px`;
+    tri.style.fontSize = "60px"; // Bigger size!
+    tri.style.pointerEvents = "none";
+    tri.style.zIndex = 9999;
+    tri.style.transition = "transform 1s ease-out, opacity 1s ease-out";
+    document.body.appendChild(tri);
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 100 + Math.random() * 50;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
+
+    requestAnimationFrame(() => {
+      tri.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`;
+      tri.style.opacity = 0;
+    });
+
+    setTimeout(() => tri.remove(), 1000);
+  }
+}
+
     function beginMadness() {
       document.getElementById('rr').play();
       document.getElementById('boom').play();
 
       const btn = document.getElementById('startBtn');
+      const rect = btn.getBoundingClientRect();
+      triangleRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
       btn.classList.add('exploded');
       document.body.classList.add('shake');
 
@@ -285,7 +345,62 @@
       document.body.appendChild(sparkle);
       setTimeout(() => sparkle.remove(), 300);
     });
-  </script>
 
+    document.addEventListener("mousedown", () => {
+      triangleStorm = setInterval(spawnTriangle, 50);
+    });
+
+    document.addEventListener("mouseup", () => {
+      clearInterval(triangleStorm);
+    });
+
+    // Mobile support
+document.addEventListener("touchstart", () => {
+  triangleStorm = setInterval(() => spawnTriangle({ clientX: lastX, clientY: lastY }), 50);
+});
+document.addEventListener("touchend", () => {
+  clearInterval(triangleStorm);
+});
+document.addEventListener("touchcancel", () => {
+  clearInterval(triangleStorm);
+});    
+
+    let triangleStorm;
+
+    function spawnTriangle(e) {
+      const offsetY = 300 + Math.random() * 100;
+      const positions = [-1, 1];
+      positions.forEach((dir) => {
+        const tri = document.createElement("div");
+        tri.textContent = "🔺";
+        tri.style.position = "fixed";
+        tri.style.left = (e?.clientX || lastX) + "px";
+        tri.style.top = (e?.clientY || lastY) + "px";
+        tri.style.fontSize = "20px";
+        tri.style.zIndex = 9999;
+        tri.style.pointerEvents = "none";
+        tri.style.userSelect = "none";
+        tri.style.transition = "transform 2s ease-out, opacity 2s ease-out";
+        document.body.appendChild(tri);
+
+        const offsetX = dir * offsetY * 0.6;
+        const angle = dir * (15 + Math.random() * 30);
+
+        setTimeout(() => {
+          tri.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg)`;
+          tri.style.opacity = 0;
+        }, 10);
+
+        setTimeout(() => tri.remove(), 2000);
+      });
+    }
+
+    let lastX = 0;
+    let lastY = 0;
+    document.addEventListener("mousemove", (e) => {
+      lastX = e.clientX;
+      lastY = e.clientY;
+    });
+  </script>
 </body>
 </html>
