@@ -375,10 +375,12 @@
     const crunchBtn     = document.getElementById('startBtn');
     const gotchaBtn     = document.getElementById('gotcha-btn');
 
-    window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('startBtn').classList.add('show');
-  }, 500); // delay in ms
+window.addEventListener('load', () => {
+  document.fonts.ready.then(() => {
+    setTimeout(() => {
+      document.getElementById('startBtn').classList.add('show');
+    }, 100); // smooth + avoids layout jump
+  });
 });
     
     const apologyTexts  = [
